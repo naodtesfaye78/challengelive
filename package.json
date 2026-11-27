@@ -1,0 +1,13 @@
+{
+  "name": "challengelive",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ChallengeLive - Live Dares, voting, community goal and Q&A for Twitch",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "DEV_HARNESS=1 node server.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": { "node": ">=18" }
+}
