@@ -70,7 +70,10 @@
     notice = null;
     render(true);
     Promise.resolve().then(fn).then(function (res) {
-      if (res && res.message) notice = { kind: 'ok', text: res.message };
+      if (res && res.message) {
+        var refused = (res.dare && res.dare.status === 'rejected') || (res.question && res.question.status === 'rejected');
+        notice = { kind: refused ? 'bad' : 'ok', text: res.message };
+      }
     }).catch(function (err) {
       notice = { kind: 'bad', text: err.message };
     }).then(function () {
