@@ -583,7 +583,7 @@ function createApp(deps) {
         return res.end();
       }
 
-      if (url.pathname === '/health') return send(res, 200, { ok: true });
+      if (url.pathname === '/health') return send(res, 200, { ok: true, secretBytes: config.secretKeys[0].length, secrets: config.secretKeys.length });
       if (url.pathname === '/') {
         res.writeHead(200, { 'content-type': 'text/plain; charset=utf-8' });
         return res.end('ChallengeLive server is running.\n' + (config.devHarness ? 'Test mode is ON: open /dev/\n' : '') + 'Hosted Test zip: /extension.zip\n');
