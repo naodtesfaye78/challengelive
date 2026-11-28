@@ -539,7 +539,7 @@ function createApp(deps) {
     fs.readFile(file, (err, data) => {
       if (err) return send(res, 404, { error: 'not_found', message: 'Not found.' });
       const out = transform ? transform(data) : data;
-      res.writeHead(200, { 'content-type': MIME[path.extname(file)] || 'application/octet-stream', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' });
+      res.writeHead(200, { 'content-type': MIME[path.extname(file)] || 'application/octet-stream', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'content-security-policy': 'frame-ancestors https://www.twitch.tv https://dashboard.twitch.tv https://supervisor.ext-twitch.tv https://*.ext-twitch.tv' });
       res.end(out);
     });
   }
