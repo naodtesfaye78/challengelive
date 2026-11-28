@@ -334,7 +334,7 @@ test('Hosted Test zip is a valid zip with the right files and the server address
     execFileSync('unzip', ['-tq', f]);
     execFileSync('unzip', ['-q', f, '-d', path.join(dir, 'out')]);
     const names = fs.readdirSync(path.join(dir, 'out')).sort();
-    assert.deepEqual(names, ['app.js', 'config.html', 'live_config.html', 'settings.js', 'styles.css', 'viewer.html']);
+    assert.deepEqual(names, ['app.js', 'component.html', 'config.html', 'live_config.html', 'mobile.html', 'settings.js', 'styles.css', 'viewer.html']);
     assert.match(fs.readFileSync(path.join(dir, 'out', 'settings.js'), 'utf8'), /https:\/\/example-app\.up\.railway\.app/);
   } finally { await s.stop(); }
 });

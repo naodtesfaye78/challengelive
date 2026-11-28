@@ -552,7 +552,7 @@ function createApp(deps) {
   }
 
   function extensionFiles(apiBase) {
-    const names = ['viewer.html', 'live_config.html', 'config.html', 'app.js', 'styles.css'];
+    const names = ['viewer.html', 'component.html', 'mobile.html', 'live_config.html', 'config.html', 'app.js', 'styles.css'];
     const files = names.map((n) => ({ name: n, data: fs.readFileSync(path.join(EXT_DIR, n)) }));
     files.push({ name: 'settings.js', data: Buffer.from('window.CL_SETTINGS = ' + JSON.stringify({ apiBase }) + ';\n') });
     return files;
@@ -597,7 +597,7 @@ function createApp(deps) {
 
       if (req.method === 'GET' && url.pathname.startsWith('/extension/')) {
         const name = path.basename(url.pathname);
-        if (!['viewer.html', 'live_config.html', 'config.html', 'app.js', 'styles.css', 'settings.js'].includes(name)) return send(res, 404, { error: 'not_found', message: 'Not found.' });
+        if (!['viewer.html', 'component.html', 'mobile.html', 'live_config.html', 'config.html', 'app.js', 'styles.css', 'settings.js'].includes(name)) return send(res, 404, { error: 'not_found', message: 'Not found.' });
         if (name === 'settings.js') {
           res.writeHead(200, { 'content-type': MIME['.js'], 'cache-control': 'no-store' });
           return res.end('window.CL_SETTINGS = ' + JSON.stringify({ apiBase: '' }) + ';\n');
@@ -618,7 +618,7 @@ function createApp(deps) {
         }
         if (url.pathname === '/dev/twitch-ext.js') return serveFile(res, path.join(DEV_DIR, 'twitch-ext.js'));
         if (url.pathname === '/dev/' || url.pathname === '/dev') return serveFile(res, path.join(DEV_DIR, 'index.html'));
-        const m = url.pathname.match(/^\/dev\/(viewer|live_config|config)\.html$/);
+        const m = url.pathname.match(/^\/dev\/(viewer|component|mobile|live_config|config)\.html$/);
         if (m) {
           return serveFile(res, path.join(EXT_DIR, m[1] + '.html'), (data) =>
             Buffer.from(
