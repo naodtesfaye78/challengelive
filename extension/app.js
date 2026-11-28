@@ -106,6 +106,20 @@
     }, wait);
   }
 
+  var startView = view;
+  function switchTo(next) {
+    view = next;
+    tab = next === 'live' ? 'queue' : 'dares';
+    state = null;
+    lastJson = '';
+    notice = null;
+    render(true);
+    refresh();
+  }
+  function switchButton(label, next) {
+    return h('button', { class: 'btn small ghost', onclick: function () { switchTo(next); } }, label);
+  }
+
   // ---------- small UI pieces ----------
   function remember(el, key) {
     el.setAttribute('data-key', key);
@@ -271,7 +285,7 @@
   function renderViewer() {
     var list = [{ id: 'dares', label: 'Dares' }, { id: 'vote', label: 'Vote', dot: !!state.poll }, { id: 'goal', label: 'Goal' }, { id: 'qa', label: 'Q&A' }, { id: 'mine', label: 'Mine' }];
     var body = { dares: viewerDares, vote: viewerVote, goal: viewerGoal, qa: viewerQA, mine: viewerMine }[tab]();
-    return [h('div', { class: 'top' }, h('span', { class: 'brand' }, 'ChallengeLive'), h('span', { class: 'tag' }, 'Live Dares')), tabs(list), h('div', { class: 'panel' }, noticeBox(), body)];
+    return [h('div', { class: 'top' }, h('span', { class: 'brand' }, 'ChallengeLive'), state.role === 'broadcaster' ? switchButton('Streamer controls', 'live') : h('span', { class: 'tag' }, 'Live Dares')), tabs(list), h('div', { class: 'panel' }, noticeBox(), body)];
   }
 
   // ---------- streamer screens ----------
@@ -388,7 +402,7 @@
     if (state.role !== 'broadcaster') return [h('div', { class: 'pad' }, 'Only the channel owner can use this dashboard.')];
     var list = [{ id: 'queue', label: 'Dares' + (state.waiting.length ? ' (' + state.waiting.length + ')' : '') }, { id: 'vote', label: 'Vote', dot: !!state.poll }, { id: 'goal', label: 'Goal' }, { id: 'qa', label: 'Q&A' + (state.questions.waiting.length ? ' (' + state.questions.waiting.length + ')' : '') }, { id: 'settings', label: 'Settings' }];
     var body = { queue: streamerQueue, vote: streamerVote, goal: streamerGoal, qa: streamerQA, settings: streamerSettings }[tab]();
-    return [h('div', { class: 'top' }, h('span', { class: 'brand' }, 'ChallengeLive'), h('span', { class: 'tag ok' }, 'You decide everything')), tabs(list), h('div', { class: 'panel' }, noticeBox(), body)];
+    return [h('div', { class: 'top' }, h('span', { class: 'brand' }, 'ChallengeLive'), startView === 'viewer' ? switchButton('Viewer view', 'viewer') : h('span', { class: 'tag ok' }, 'You decide everything')), tabs(list), h('div', { class: 'panel' }, noticeBox(), body)];
   }
 
   // ---------- render ----------
