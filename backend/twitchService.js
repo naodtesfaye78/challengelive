@@ -41,16 +41,16 @@ function createTwitchService(options) {
     } catch (err) {
       if (err instanceof JwtError) {
         if (err.code === 'expired') throw new ApiError(401, 'token_expired', 'Your session expired. Please reload the extension.');
-        throw new ApiError(401, 'invalid_token', 'We could not verify your Twitch session.');
+        throw new ApiError(401, 'invalid_token', 'We could not verify your Twitch session. (' + err.code + ')');
       }
       throw err;
     }
-    const bad = () => new ApiError(401, 'invalid_token', 'We could not verify your Twitch session.');
+    const bad = (why) => new ApiError(401, 'invalid_token', 'We could not verify your Twitch session. (bad_' + why + ')');
     const userId = c.user_id === undefined || c.user_id === '' ? null : c.user_id;
-    if (typeof c.channel_id !== 'string' || !NUMERIC_ID.test(c.channel_id)) throw bad();
-    if (typeof c.role !== 'string' || !ROLES.has(c.role)) throw bad();
-    if (typeof c.opaque_user_id !== 'string' || !OPAQUE_ID.test(c.opaque_user_id)) throw bad();
-    if (userId !== null && (typeof userId !== 'string' || !NUMERIC_ID.test(userId))) throw bad();
+    if (typeof c.channel_id !== 'string' || !NUMERIC_ID.test(c.channel_id)) throw bad('channel');
+    if (typeof c.role !== 'string' || !ROLES.has(c.role)) throw bad('role');
+    if (typeof c.opaque_user_id !== 'string' || !OPAQUE_ID.test(c.opaque_user_id)) throw bad('user');
+    if (userId !== null && (typeof userId !== 'string' || !NUMERIC_ID.test(userId))) throw bad('userid');
     return { channelId: c.channel_id, role: c.role, opaqueId: c.opaque_user_id, userId, loggedIn: c.opaque_user_id[0] === 'U' };
   }
 
